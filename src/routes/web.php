@@ -32,3 +32,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/mypage', [UserController::class, 'show']);
 });
+Route::middleware('auth')->group(function () {
+    Route::get('/sell', [ItemController::class, 'create']);
+    Route::post('/sell', [ItemController::class, 'store']);
+});

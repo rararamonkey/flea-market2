@@ -37,3 +37,4 @@ class AddProfileColumnsToUsersTable extends Migration
         ]);
     });
 }
+}

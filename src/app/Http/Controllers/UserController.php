@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use Illuminate\Http\Request;
+use App\Http\Requests\ProfileRequest;
 
 class UserController extends Controller
 {
@@ -29,7 +30,7 @@ class UserController extends Controller
         return view('users.edit');
     }
 
-    public function update(Request $request)
+    public function update(ProfileRequest $request)
     {
         $user = auth()->user();
 

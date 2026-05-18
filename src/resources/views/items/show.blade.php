@@ -3,14 +3,16 @@
 @section('content')
     <div class="item-detail">
 
-        <div class="item-detail__image">
-            商品画像
-        </div>
+    <div class="item-detail__image">
+    @if ($item->image)
+        <img src="{{ asset('storage/' . $item->image) }}" class="detail-image">
+    @else
+        商品画像
+    @endif
+</div>
 
-        <div class="item-detail__content">
-
-            <h2>{{ $item->name }}</h2>
-
+    <div class="item-detail__content">
+        <h2>{{ $item->name }}</h2>
             <p class="item-detail__brand">
                 {{ $item->brand }}
             </p>
@@ -97,14 +99,19 @@
             @foreach ($item->comments as $comment)
                 <div class="comment-box">
                     <div class="comment-user">
-                        <div class="comment-icon"></div>
-                        <strong>{{ $comment->user->name }}</strong>
-                    </div>
+                        <div class="comment-icon">
+                            @if ($comment->user->profile_image)
+                                <img src="{{ asset('storage/' . $comment->user->profile_image) }}"
+                                    class="comment-profile-image">
+                            @endif
+                        </div>
 
-                    <p class="comment-content">
-                        {{ $comment->content }}
-                    </p>
-                </div>
+                        <strong>{{ $comment->user->name }}</strong>
+
+                        <p class="comment-content">
+                            {{ $comment->content }}
+                        </p>
+                    </div>
             @endforeach
 
             @auth

@@ -17,12 +17,16 @@
             <a href="/item/{{ $item->id }}" class="item-card">
 
                 <div class="item-image">
-                    商品画像
+    @if ($item->image)
+        <img src="{{ asset('storage/' . $item->image) }}" class="item-card-img">
+    @else
+        商品画像
+    @endif
 
-                    @if ($item->purchase)
-                        <span class="sold-label">Sold</span>
-                    @endif
-                </div>
+    @if ($item->purchase)
+        <span class="sold-label">Sold</span>
+    @endif
+</div>
 
                 <p class="item-name">
                     {{ $item->name }}

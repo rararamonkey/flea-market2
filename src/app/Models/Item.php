@@ -10,6 +10,16 @@ use App\Models\Category;
 
 class Item extends Model
 {
+    protected $fillable = [
+        'user_id',
+        'name',
+        'brand',
+        'price',
+        'description',
+        'condition',
+        'image',
+    ];
+    
     public function likes()
     {
         return $this->hasMany(Like::class);

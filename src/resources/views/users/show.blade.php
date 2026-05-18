@@ -6,9 +6,7 @@
         <div class="mypage-header">
             <div class="mypage-icon">
                 @if ($user->profile_image)
-                    <img src="{{ asset('storage/' . $user->profile_image) }}">
-                @else
-                    <div class="mypage-icon"></div>
+                    <img src="{{ asset('storage/' . $user->profile_image) }}" class="mypage-profile-image">
                 @endif
             </div>
             <h2>{{ $user->name }}</h2>
@@ -26,16 +24,18 @@
         <div class="item-list">
 
             @foreach ($items as $item)
-                <div class="item-card">
+    <a href="/item/{{ $item->id }}" class="item-card">
+        <div class="item-card__image">
+            @if ($item->image)
+                <img src="{{ asset('storage/' . $item->image) }}" class="item-card__img">
+            @else
+                商品画像
+            @endif
+        </div>
 
-                    <div class="item-image">
-                        商品画像
-                    </div>
-
-                    <p>{{ $item->name }}</p>
-
-                </div>
-            @endforeach
+        <p class="item-name">{{ $item->name }}</p>
+    </a>
+@endforeach
 
         </div>
 

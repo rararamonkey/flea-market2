@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Item;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Category;
+use App\Http\Requests\ExhibitionRequest;
 
 class ItemController extends Controller
 {
@@ -53,18 +55,29 @@ class ItemController extends Controller
 
     // 出品画面
     public function create()
-    {
-        return view('items.create');
-    }
+{
+    $categories = Category::all();
+
+    return view('items.create', compact('categories'));
+}
 
     // 保存（ここでRequest使う）
-    public function store(Request $request)
-    {
-        // ここで保存処理
-    }
-
-    public function purchase()
+    public function store(ExhibitionRequest $request)
 {
-    return $this->hasOne(Purchase::class);
+    $imagePath = $request->file('image')->store('items', 'public');
+
+    $item = Item::create([
+        'user_id' => auth()->id(),
+        'name' => $request->name,
+        'brand' => $request->brand,
+        'price' => $request->price,
+        'description' => $request->description,
+        'condition' => $request->condition,
+        'image' => $imagePath,
+    ]);
+
+    $item->categories()->attach($request->categories);
+
+    return redirect('/');
 }
 }
