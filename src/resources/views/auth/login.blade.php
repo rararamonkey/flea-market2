@@ -23,11 +23,6 @@
 @enderror
             </div>
 
-            @if (session('error'))
-                <p style="color:red; text-align:center;">
-                    {{ session('error') }}
-                </p>
-            @endif
             <button type="submit" class="auth-button">ログインする</button>
 
             <p class="auth-link">

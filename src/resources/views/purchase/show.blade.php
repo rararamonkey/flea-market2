@@ -27,6 +27,9 @@
                         <option value="コンビニ支払い">コンビニ支払い</option>
                         <option value="カード支払い">カード支払い</option>
                     </select>
+                    @error('payment_method')
+    <p class="error-message">{{ $message }}</p>
+@enderror
                 </div>
 
                 <div class="purchase-section">
@@ -55,8 +58,16 @@
 
             <div class="summary-row">
                 <span>支払方法</span>
-                <span>選択してください</span>
+                <span id="selected-payment">選択してください</span>
             </div>
+            <script>
+    const paymentSelect = document.querySelector('select[name="payment_method"]');
+    const selectedPayment = document.getElementById('selected-payment');
 
-        </div>
+    paymentSelect.addEventListener('change', function () {
+        selectedPayment.textContent = this.value || '選択してください';
+    });
+</script>
+ </div>
+    </div>
     @endsection

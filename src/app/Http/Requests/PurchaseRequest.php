@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AddressRequest extends FormRequest
+class PurchaseRequest extends FormRequest
 {
     public function authorize()
     {
@@ -14,7 +14,14 @@ class AddressRequest extends FormRequest
     public function rules()
     {
         return [
-            // ここにバリデーション書く
+            'payment_method' => ['required'],
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'payment_method.required' => '支払い方法を選択してください',
         ];
     }
 }

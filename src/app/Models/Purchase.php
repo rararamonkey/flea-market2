@@ -7,8 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class Purchase extends Model
 {
     protected $fillable = [
-    'user_id',
-    'item_id',
-    'payment_method',
-];
+        'user_id',
+        'item_id',
+        'payment_method',
+        'postal_code',
+        'address',
+        'building',
+    ];
 }

@@ -14,12 +14,17 @@ class CreatePurchasesTable extends Migration
     public function up()
 {
     Schema::create('purchases', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
-        $table->foreignId('item_id')->constrained()->onDelete('cascade');
-        $table->string('payment_method')->nullable();
-        $table->timestamps();
-    });
+    $table->id();
+    $table->foreignId('user_id')->constrained()->onDelete('cascade');
+    $table->foreignId('item_id')->constrained()->onDelete('cascade');
+    $table->string('payment_method')->nullable();
+
+    $table->string('postal_code');
+    $table->string('address');
+    $table->string('building')->nullable();
+
+    $table->timestamps();
+});
 }
 
     /**

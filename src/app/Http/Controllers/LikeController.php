@@ -8,14 +8,14 @@ use Illuminate\Http\Request;
 class LikeController extends Controller
 {
     public function store(Request $request)
-    {
-        Like::create([
-            'user_id' => auth()->id(),
-            'item_id' => $request->item_id,
-        ]);
+{
+    Like::firstOrCreate([
+        'user_id' => auth()->id(),
+        'item_id' => $request->item_id,
+    ]);
 
-        return back();
-    }
+    return back();
+}
 
     public function destroy(Request $request)
     {

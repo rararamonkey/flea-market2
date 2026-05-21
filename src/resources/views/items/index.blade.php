@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -18,10 +22,16 @@
 
                 <div class="item-image">
     @if ($item->image)
-        <img src="{{ asset('storage/' . $item->image) }}" class="item-card-img">
+
+    @if (Str::startsWith($item->image, 'http'))
+        <img src="{{ $item->image }}" class="detail-image">
     @else
-        商品画像
+        <img src="{{ asset('storage/' . $item->image) }}" class="detail-image">
     @endif
+
+@else
+    商品画像
+@endif
 
     @if ($item->purchase)
         <span class="sold-label">Sold</span>

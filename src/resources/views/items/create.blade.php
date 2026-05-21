@@ -9,12 +9,21 @@
         @csrf
 
         <div class="sell-group">
-            <label>商品画像</label>
-            <input type="file" name="image">
-            @error('image')
-                <p class="error-message">{{ $message }}</p>
-            @enderror
-        </div>
+    <label>商品画像</label>
+
+    <div class="image-upload-area">
+
+        <label class="image-upload-button">
+            画像を選択する
+            <input type="file" name="image" hidden>
+        </label>
+
+    </div>
+
+    @error('image')
+        <p class="error-message">{{ $message }}</p>
+    @enderror
+</div>
 
         <h3 class="sell-section-title">商品の詳細</h3>
 
