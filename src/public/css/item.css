@@ -757,11 +757,6 @@
     margin-top: 10px;
     font-size: 18px;
 }
-.detail-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
 .item-card {
     text-decoration: none;
     color: #000;
@@ -779,7 +774,7 @@
 .detail-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 .image-upload-area {
     width: 100%;

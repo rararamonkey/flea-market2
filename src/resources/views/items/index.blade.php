@@ -6,13 +6,15 @@
 
 @section('content')
     <div class="item-tabs">
-        <a href="/" class="{{ request('tab') !== 'mylist' ? 'active' : '' }}">
-            おすすめ
-        </a>
+        <a href="/?keyword={{ request('keyword') }}"
+   class="{{ request('tab') !== 'mylist' ? 'active' : '' }}">
+    おすすめ
+</a>
 
-        <a href="/?tab=mylist" class="{{ request('tab') === 'mylist' ? 'active' : '' }}">
-            マイリスト
-        </a>
+<a href="/?tab=mylist&keyword={{ request('keyword') }}"
+   class="{{ request('tab') === 'mylist' ? 'active' : '' }}">
+    マイリスト
+</a>
     </div>
 
     <div class="item-list">

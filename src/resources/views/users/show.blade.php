@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -27,10 +31,14 @@
     <a href="/item/{{ $item->id }}" class="item-card">
         <div class="item-card__image">
             @if ($item->image)
-                <img src="{{ asset('storage/' . $item->image) }}" class="item-card__img">
-            @else
-                商品画像
-            @endif
+    @if (Str::startsWith($item->image, 'http'))
+        <img src="{{ $item->image }}" class="item-card__img">
+    @else
+        <img src="{{ asset('storage/' . $item->image) }}" class="item-card__img">
+    @endif
+@else
+    商品画像
+@endif
         </div>
 
         <p class="item-name">{{ $item->name }}</p>
