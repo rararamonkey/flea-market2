@@ -65,7 +65,15 @@ php artisan config:clear
 
 ## メール認証
 
-MailHogを使用しています。
+本アプリでは Laravel Fortify のメール認証機能を使用しています。  
+メール送信確認には MailHog を使用しています。
+
+会員登録後、認証メールが MailHog に送信されます。  
+以下のURLから MailHog を開き、受信したメール内の認証リンクをクリックしてください。
+
+MailHog：http://localhost:8025
+
+### メール設定
 
 ```env
 MAIL_MAILER=smtp
