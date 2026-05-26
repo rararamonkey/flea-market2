@@ -12,13 +12,13 @@
     <label>商品画像</label>
 
     <div class="image-upload-area">
+    <img id="sellImagePreview" class="sell-image-preview" alt="プレビュー">
 
-        <label class="image-upload-button">
-            画像を選択する
-            <input type="file" name="image" hidden>
-        </label>
-
-    </div>
+    <label class="image-upload-button" id="imageUploadButton">
+        画像を選択する
+        <input type="file" name="image" id="sellImageInput" accept="image/*" hidden>
+    </label>
+</div>
 
     @error('image')
         <p class="error-message">{{ $message }}</p>
@@ -47,13 +47,35 @@
 
         <div class="sell-group">
             <label>商品の状態</label>
-            <select name="condition" class="sell-input sell-select">
-    <option value="">選択してください</option>
-    <option value="良好" {{ old('condition') === '良好' ? 'selected' : '' }}>良好</option>
-    <option value="目立った傷や汚れなし" {{ old('condition') === '目立った傷や汚れなし' ? 'selected' : '' }}>目立った傷や汚れなし</option>
-    <option value="やや傷や汚れあり" {{ old('condition') === 'やや傷や汚れあり' ? 'selected' : '' }}>やや傷や汚れあり</option>
-    <option value="状態が悪い" {{ old('condition') === '状態が悪い' ? 'selected' : '' }}>状態が悪い</option>
-</select>
+            <input type="hidden" name="condition" id="conditionInput" value="{{ old('condition') }}">
+
+<div class="custom-select" id="conditionSelect">
+    <div class="custom-select__selected">
+        {{ old('condition') ?: '選択してください' }}
+    </div>
+
+    <div class="custom-select__options">
+        <div class="custom-select__option {{ old('condition') === '良好' ? 'is-selected' : '' }}"
+             data-value="良好">
+            良好
+        </div>
+
+        <div class="custom-select__option {{ old('condition') === '目立った傷や汚れなし' ? 'is-selected' : '' }}"
+             data-value="目立った傷や汚れなし">
+            目立った傷や汚れなし
+        </div>
+
+        <div class="custom-select__option {{ old('condition') === 'やや傷や汚れあり' ? 'is-selected' : '' }}"
+             data-value="やや傷や汚れあり">
+            やや傷や汚れあり
+        </div>
+
+        <div class="custom-select__option {{ old('condition') === '状態が悪い' ? 'is-selected' : '' }}"
+             data-value="状態が悪い">
+            状態が悪い
+        </div>
+    </div>
+</div>
             @error('condition')
                 <p class="error-message">{{ $message }}</p>
             @enderror
@@ -106,4 +128,66 @@
     </form>
 
 </div>
+<script>
+const imageInput = document.getElementById('sellImageInput');
+const imagePreview = document.getElementById('sellImagePreview');
+const imageUploadButton = document.getElementById('imageUploadButton');
+
+imageInput.addEventListener('change', function () {
+    const file = this.files[0];
+
+    if (!file) {
+        imagePreview.src = '';
+        imagePreview.style.display = 'none';
+        imageUploadButton.style.display = 'flex';
+        return;
+    }
+
+    imagePreview.src = URL.createObjectURL(file);
+    imagePreview.style.display = 'block';
+    imageUploadButton.style.display = 'none';
+});
+
+const conditionSelect = document.getElementById('conditionSelect');
+const conditionSelected = conditionSelect.querySelector('.custom-select__selected');
+const conditionOptions = conditionSelect.querySelector('.custom-select__options');
+const conditionItems = conditionSelect.querySelectorAll('.custom-select__option');
+const conditionInput = document.getElementById('conditionInput');
+
+conditionSelected.addEventListener('click', function () {
+
+    conditionItems.forEach(function (item) {
+
+        if (item.dataset.value === conditionInput.value) {
+            item.style.display = 'none';
+        } else {
+            item.style.display = 'block';
+        }
+
+    });
+
+    conditionOptions.style.display =
+        conditionOptions.style.display === 'block' ? 'none' : 'block';
+});
+
+conditionItems.forEach(function (option) {
+
+    option.addEventListener('click', function () {
+
+        const value = this.dataset.value;
+
+        conditionSelected.textContent = value;
+        conditionInput.value = value;
+
+        conditionItems.forEach(item => {
+            item.classList.remove('is-selected');
+        });
+
+        this.classList.add('is-selected');
+
+        conditionOptions.style.display = 'none';
+    });
+
+});
+</script>
 @endsection

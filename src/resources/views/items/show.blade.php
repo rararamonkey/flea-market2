@@ -1,6 +1,7 @@
 @php
     use Illuminate\Support\Str;
 @endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -32,56 +33,56 @@
 
             <div class="item-icons">
 
-                <div class="icon-group">
-                    {{-- いいね --}}
-                    @php
-                        $isLiked = auth()->check() && $item->likes->where('user_id', auth()->id())->isNotEmpty();
-                    @endphp
+    @if (!(Auth::check() && Auth::id() === $item->user_id))
+        <div class="icon-group">
+            {{-- いいね --}}
+            @php
+                $isLiked = auth()->check() && $item->likes->where('user_id', auth()->id())->isNotEmpty();
+            @endphp
 
-                    @auth
-                        @if ($isLiked)
-                            <form action="/like" method="POST">
-                                @csrf
-                                @method('DELETE')
+            @auth
+                @if ($isLiked)
+                    <form action="/like" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <input type="hidden" name="item_id" value="{{ $item->id }}">
+                        <button type="submit" class="like-button">
+                            <img src="{{ asset('images/heart-pink.png') }}" class="icon-image">
+                        </button>
+                    </form>
+                @else
+                    <form action="/like" method="POST">
+                        @csrf
+                        <input type="hidden" name="item_id" value="{{ $item->id }}">
+                        <button type="submit" class="like-button">
+                            <img src="{{ asset('images/heart-default.png') }}" class="icon-image">
+                        </button>
+                    </form>
+                @endif
+            @endauth
 
-                                <input type="hidden" name="item_id" value="{{ $item->id }}">
+            <p>{{ $item->likes->count() }}</p>
+        </div>
+    @endif
 
-                                <button type="submit" class="like-button">
-                                    <img src="{{ asset('images/heart-pink.png') }}" class="icon-image">
-                                </button>
-                            </form>
-                        @else
-                            <form action="/like" method="POST">
-                                @csrf
+    <div class="icon-group">
+        <img src="{{ asset('images/icon.png') }}" class="icon-image">
+        <p>{{ $item->comments->count() }}</p>
+    </div>
 
-                                <input type="hidden" name="item_id" value="{{ $item->id }}">
-
-                                <button type="submit" class="like-button">
-                                    <img src="{{ asset('images/heart-default.png') }}" class="icon-image">
-                                </button>
-                            </form>
-                        @endif
-                    @endauth
-
-                    <p>{{ $item->likes->count() }}</p>
-                </div>
-
-                <div class="icon-group">
-                    <img src="{{ asset('images/icon.png') }}" class="icon-image">
-                    <p>{{ $item->comments->count() }}</p>
-                </div>
-
-            </div>
+</div>
 
             @if ($item->purchase)
-                <button class="sold-button" disabled>
-                    Sold
-                </button>
-            @else
-                <a href="/purchase/{{ $item->id }}" class="purchase-button">
-                    購入手続きへ
-                </a>
-            @endif
+    <button class="sold-button" disabled>
+        Sold
+    </button>
+@elseif (Auth::check() && Auth::id() === $item->user_id)
+    {{-- 自分の商品なので購入ボタンは表示しない --}}
+@else
+    <a href="/purchase/{{ $item->id }}" class="purchase-button">
+        購入手続きへ
+    </a>
+@endif
 
             <h3>商品説明</h3>
             <p>{{ $item->description }}</p>
