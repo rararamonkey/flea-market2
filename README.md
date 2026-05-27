@@ -20,6 +20,19 @@ docker compose up -d --build
 docker compose exec php bash
 composer install
 cp .env.example .env
+
+## DB設定
+
+`.env` のDB接続を以下に設定してください。
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_pass
+```
 php artisan key:generate
 php artisan migrate:fresh --seed
 php artisan storage:link
