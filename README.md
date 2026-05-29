@@ -73,15 +73,16 @@ php artisan config:clear
 
 ## テストアカウント
 
-### 出品者ユーザー
+以下のテストアカウントは認証済みです。
+そのままログインして動作確認できます。
 
-* メールアドレス：[seller@test.com](mailto:seller@test.com)
-* パスワード：password
+### 出品者ユーザー
+- メールアドレス：seller@test.com
+- パスワード：password
 
 ### 購入者ユーザー
-
-* メールアドレス：[buyer@test.com](mailto:buyer@test.com)
-* パスワード：password
+- メールアドレス：buyer@test.com
+- パスワード：password
 
 ## メール認証
 
@@ -112,7 +113,6 @@ Stripe決済機能を利用するため、Stripeダッシュボードから取�
 ```env
 STRIPE_KEY=pk_test_各自のStripe公開キー
 STRIPE_SECRET=sk_test_各自のStripeシークレットキー
-```
 ```
 
 ### 決済確認について
@@ -153,7 +153,15 @@ http://localhost
 * プロフィール編集
 * 商品出品
 
+## 備考
+
+テストアカウントは認証済みのため、そのままログインして動作確認できます。
+
+メール認証機能を確認する場合は、新規会員登録を行い、MailHogで認証メールを確認してください。
+
 ## ER図
 
-※ER図を追加
+## ER図
+
+![ER図](./images/er.png)
 
