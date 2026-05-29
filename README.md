@@ -101,9 +101,18 @@ Stripe決済を使用しています。
 
 Stripe決済機能を利用するため、Stripeダッシュボードから取得したテスト用APIキーを `.env` に設定してください。
 
+### APIキー取得方法
+
+1. Stripe Dashboard にログイン
+2. テストモードをONにする
+3. 「開発者」→「APIキー」を開く
+4. 公開可能キー（pk_test_...）とシークレットキー（sk_test_...）を取得
+5. `.env` に設定
+
 ```env
 STRIPE_KEY=pk_test_各自のStripe公開キー
 STRIPE_SECRET=sk_test_各自のStripeシークレットキー
+```
 ```
 
 ### 決済確認について
