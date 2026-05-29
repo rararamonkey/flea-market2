@@ -5,42 +5,44 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="item-detail">
+<div class="item-detail">
 
     <div class="item-detail__image">
-   @if ($item->image)
+        @if ($item->image)
 
-    @if (Str::startsWith($item->image, 'http'))
-        <img src="{{ $item->image }}" class="item-card-img">
-    @else
-        <img src="{{ asset('storage/' . $item->image) }}" class="item-card-img">
-    @endif
+            @if (Str::startsWith($item->image, 'http'))
+                <img src="{{ $item->image }}" class="item-card-img">
+            @else
+                <img src="{{ asset('storage/' . $item->image) }}" class="item-card-img">
+            @endif
 
-@else
-    商品画像
-@endif
-</div>
+        @else
+            商品画像
+        @endif
+    </div>
 
     <div class="item-detail__content">
+
         <h2>{{ $item->name }}</h2>
-            <p class="item-detail__brand">
-                {{ $item->brand }}
-            </p>
 
-            <p class="item-detail__price">
-                ¥{{ number_format($item->price) }} <span>（税込）</span>
-            </p>
+        <p class="item-detail__brand">
+            {{ $item->brand }}
+        </p>
 
-            <div class="item-icons">
+        <p class="item-detail__price">
+            ¥{{ number_format($item->price) }}
+            <span>（税込）</span>
+        </p>
+
+        <div class="item-icons">
 
     @if (!(Auth::check() && Auth::id() === $item->user_id))
         <div class="icon-group">
-            {{-- いいね --}}
             @php
                 $isLiked = auth()->check() && $item->likes->where('user_id', auth()->id())->isNotEmpty();
             @endphp
 
-            @auth
+                        @auth
                 @if ($isLiked)
                     <form action="/like" method="POST">
                         @csrf
@@ -59,6 +61,11 @@
                         </button>
                     </form>
                 @endif
+
+            @else
+
+                <img src="{{ asset('images/heart-default.png') }}" class="icon-image">
+
             @endauth
 
             <p>{{ $item->likes->count() }}</p>
@@ -72,81 +79,122 @@
 
 </div>
 
-            @if ($item->purchase)
-    <button class="sold-button" disabled>
-        Sold
-    </button>
-@elseif (Auth::check() && Auth::id() === $item->user_id)
-    {{-- 自分の商品なので購入ボタンは表示しない --}}
-@else
-    <a href="/purchase/{{ $item->id }}" class="purchase-button">
-        購入手続きへ
-    </a>
-@endif
+        @if ($item->purchase)
 
-            <h3>商品説明</h3>
-            <p>{{ $item->description }}</p>
+            <button class="sold-button" disabled>
+                Sold
+            </button>
 
-            <h3>商品の情報</h3>
+        @elseif (Auth::check() && Auth::id() === $item->user_id)
 
-            <div class="item-info-row">
-                <strong>カテゴリー</strong>
+            {{-- 自分の商品なので購入ボタンは表示しない --}}
 
-                @foreach ($item->categories as $category)
-                    <span class="category-tag">
-                        {{ $category->name }}
-                    </span>
-                @endforeach
-            </div>
+        @else
 
-            <div class="item-info-row">
-                <span class="item-info-label">商品の状態</span>
-                <span>{{ $item->condition }}</span>
-            </div>
+            <a href="/purchase/{{ $item->id }}" class="purchase-button">
+                購入手続きへ
+            </a>
 
-            <h3>コメント({{ $item->comments->count() }})</h3>
+        @endif
 
-            @foreach ($item->comments as $comment)
-                <div class="comment-box">
-                    <div class="comment-user">
-                        <div class="comment-icon">
-                            @if ($comment->user->profile_image)
-                                <img src="{{ asset('storage/' . $comment->user->profile_image) }}"
-                                    class="comment-profile-image">
-                            @endif
-                        </div>
+        <h3>商品説明</h3>
 
-                        <strong>{{ $comment->user->name }}</strong>
+        <p>{{ $item->description }}</p>
 
-                        <p class="comment-content">
-                            {{ $comment->content }}
-                        </p>
-                    </div>
+        <h3>商品の情報</h3>
+
+        <div class="item-info-row">
+
+            <strong>カテゴリー</strong>
+
+            @foreach ($item->categories as $category)
+
+                <span class="category-tag">
+                    {{ $category->name }}
+                </span>
+
             @endforeach
 
-            @auth
-                <form action="/comment" method="POST">
-                    @csrf
-                    <input type="hidden" name="item_id" value="{{ $item->id }}">
+        </div>
 
-                    <label class="comment-label">
-                        商品へのコメント
-                    </label>
+        <div class="item-info-row">
 
-                    <textarea name="content" class="comment-textarea"></textarea>
+            <span class="item-info-label">
+                商品の状態
+            </span>
 
-                    @error('content')
-                        <p class="error-message">
-                            {{ $message }}
-                        </p>
-                    @enderror
-
-                    <button type="submit" class="comment-button">
-                        コメントを送信する
-                    </button>
-                </form>
-            @endauth
+            <span>
+                {{ $item->condition }}
+            </span>
 
         </div>
+
+        <h3>
+            コメント({{ $item->comments->count() }})
+        </h3>
+
+        @foreach ($item->comments as $comment)
+
+            <div class="comment-box">
+
+                <div class="comment-user">
+
+                    <div class="comment-icon">
+
+                        @if ($comment->user->profile_image)
+
+                            <img src="{{ asset('storage/' . $comment->user->profile_image) }}"
+                                class="comment-profile-image">
+
+                        @endif
+
+                    </div>
+
+                    <strong>
+                        {{ $comment->user->name }}
+                    </strong>
+
+                    <p class="comment-content">
+                        {{ $comment->content }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        @endforeach
+
+        @auth
+
+            <form action="/comment" method="POST">
+
+                @csrf
+
+                <input type="hidden" name="item_id" value="{{ $item->id }}">
+
+                <label class="comment-label">
+                    商品へのコメント
+                </label>
+
+                <textarea name="content" class="comment-textarea"></textarea>
+
+                @error('content')
+
+                    <p class="error-message">
+                        {{ $message }}
+                    </p>
+
+                @enderror
+
+                <button type="submit" class="comment-button">
+                    コメントを送信する
+                </button>
+
+            </form>
+
+        @endauth
+
     </div>
+
+</div>
 @endsection
