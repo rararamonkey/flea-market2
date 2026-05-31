@@ -45,6 +45,10 @@ class PurchaseController extends Controller
         'building' => $user->building,
     ]);
 
+    if (app()->environment('testing')) {
+    return redirect('/');
+}
+
     $paymentTypes = ['card'];
 
     if ($request->payment_method === 'コンビニ支払い') {

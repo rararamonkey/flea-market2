@@ -7,9 +7,13 @@ use App\Models\Like;
 use App\Models\Purchase;
 use App\Models\Comment;
 use App\Models\Category;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Item extends Model
 {
+
+use HasFactory;
+
     protected $fillable = [
         'user_id',
         'name',
