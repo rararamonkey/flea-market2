@@ -54,4 +54,22 @@ public function test_user_can_unlike_item()
         'item_id' => $item->id,
     ]);
 }
+public function test_liked_item_displays_pink_heart_icon()
+{
+    $user = User::factory()->create();
+
+    $item = Item::factory()->create();
+
+    Like::create([
+        'user_id' => $user->id,
+        'item_id' => $item->id,
+    ]);
+
+    $response = $this->actingAs($user)
+        ->get('/item/' . $item->id);
+
+    $response->assertStatus(200);
+
+    $response->assertSee('heart-pink.png', false);
+}
 }

@@ -121,4 +121,15 @@ public function test_comment_user_and_content_are_displayed()
     $response->assertSee('コメントユーザー');
     $response->assertSee('これはテストコメントです');
 }
+public function test_item_image_is_displayed()
+{
+    $item = Item::factory()->create([
+        'image' => 'items/test.jpg',
+    ]);
+
+    $response = $this->get('/item/' . $item->id);
+
+    $response->assertStatus(200);
+    $response->assertSee('storage/items/test.jpg', false);
+}
 }

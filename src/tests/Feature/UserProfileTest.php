@@ -184,5 +184,34 @@ public function test_profile_image_must_be_jpeg_or_png()
         'profile_image' => '画像はjpegまたはpng形式でアップロードしてください',
     ]);
 }
+public function test_profile_image_is_optional()
+{
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
 
+    $response = $this->actingAs($user)->post('/mypage/profile', [
+        'name' => '更新後ユーザー',
+        'postal_code' => '123-4567',
+        'address' => '東京都渋谷区',
+        'building' => 'テストビル101',
+    ]);
+
+    $response->assertSessionDoesntHaveErrors();
+}
+public function test_building_is_optional()
+{
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    $response = $this->actingAs($user)->post('/mypage/profile', [
+        'name' => '更新後ユーザー',
+        'postal_code' => '123-4567',
+        'address' => '東京都渋谷区',
+        'building' => '',
+    ]);
+
+    $response->assertSessionDoesntHaveErrors();
+}
 }
