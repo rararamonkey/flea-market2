@@ -7,6 +7,7 @@ use App\Models\Purchase;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Illuminate\Http\UploadedFile;
 
 class UserProfileTest extends TestCase
 {
@@ -74,4 +75,114 @@ class UserProfileTest extends TestCase
         'building' => '変更後建物',
     ]);
 }
+public function test_name_is_required_when_updating_profile()
+{
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    $response = $this->actingAs($user)->post('/mypage/profile', [
+        'name' => '',
+        'postal_code' => '123-4567',
+        'address' => '東京都渋谷区',
+        'building' => 'テストビル101',
+    ]);
+
+    $response->assertSessionHasErrors([
+        'name' => 'ユーザー名を入力してください',
+    ]);
+}
+public function test_name_must_be_20_characters_or_less()
+{
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    $response = $this->actingAs($user)->post('/mypage/profile', [
+        'name' => str_repeat('あ', 21),
+        'postal_code' => '123-4567',
+        'address' => '東京都渋谷区',
+        'building' => 'テストビル101',
+    ]);
+
+    $response->assertSessionHasErrors([
+        'name' => 'ユーザー名は20文字以内で入力してください',
+    ]);
+}
+public function test_postal_code_is_required()
+{
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    $response = $this->actingAs($user)->post('/mypage/profile', [
+        'name' => 'テストユーザー',
+        'postal_code' => '',
+        'address' => '東京都渋谷区',
+        'building' => 'テストビル101',
+    ]);
+
+    $response->assertSessionHasErrors([
+        'postal_code' => '郵便番号を入力してください',
+    ]);
+}
+public function test_postal_code_must_include_hyphen()
+{
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    $response = $this->actingAs($user)->post('/mypage/profile', [
+        'name' => 'テストユーザー',
+        'postal_code' => '1234567',
+        'address' => '東京都渋谷区',
+        'building' => 'テストビル101',
+    ]);
+
+    $response->assertSessionHasErrors([
+        'postal_code' => '郵便番号はハイフンありで入力してください',
+    ]);
+}
+public function test_address_is_required()
+{
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    $response = $this->actingAs($user)->post('/mypage/profile', [
+        'name' => 'テストユーザー',
+        'postal_code' => '123-4567',
+        'address' => '',
+        'building' => 'テストビル101',
+    ]);
+
+    $response->assertSessionHasErrors([
+        'address' => '住所を入力してください',
+    ]);
+}
+public function test_profile_image_must_be_jpeg_or_png()
+{
+    $user = User::factory()->create([
+        'email_verified_at' => now(),
+    ]);
+
+    $file = UploadedFile::fake()->create(
+        'sample.pdf',
+        100,
+        'application/pdf'
+    );
+
+    $response = $this->actingAs($user)->post('/mypage/profile', [
+        'name' => 'テストユーザー',
+        'postal_code' => '123-4567',
+        'address' => '東京都渋谷区',
+        'building' => 'テストビル101',
+        'profile_image' => $file,
+    ]);
+
+    $response->assertSessionHasErrors([
+        'profile_image' => '画像はjpegまたはpng形式でアップロードしてください',
+    ]);
+}
+
 }
