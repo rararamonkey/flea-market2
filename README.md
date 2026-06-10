@@ -163,3 +163,7 @@ http://localhost
 
 ![ER図](./images/er.png)
 
+## テスト実行
+
+```bash
+php artisan test
