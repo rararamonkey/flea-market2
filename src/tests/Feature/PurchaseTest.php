@@ -145,4 +145,48 @@ public function test_purchased_item_is_displayed_as_sold_in_item_list()
     $response->assertSee('購入済み商品');
     $response->assertSee('Sold');
 }
+public function test_payment_method_options_are_displayed_on_purchase_page()
+{
+    $user = User::factory()->create([
+        'postal_code' => '123-4567',
+        'address' => '東京都渋谷区',
+        'building' => 'テストビル101',
+        'email_verified_at' => now(),
+    ]);
+
+    $item = Item::factory()->create([
+        'name' => 'テスト商品',
+        'price' => 10000,
+    ]);
+
+    $response = $this->actingAs($user)->get('/purchase/' . $item->id);
+
+    $response->assertStatus(200);
+    $response->assertSee('支払い方法');
+    $response->assertSee('コンビニ支払い');
+    $response->assertSee('カード支払い');
+    $response->assertSee('支払方法');
+    $response->assertSee('選択してください');
+    $response->assertSee('id="selected-payment"', false);
+    $response->assertSee('id="payment_method"', false);
+}
+public function test_payment_method_is_required_when_purchasing()
+{
+    $user = User::factory()->create([
+        'postal_code' => '123-4567',
+        'address' => '東京都渋谷区',
+        'building' => 'テストビル101',
+        'email_verified_at' => now(),
+    ]);
+
+    $item = Item::factory()->create();
+
+    $response = $this->actingAs($user)->post('/purchase/' . $item->id, [
+        'payment_method' => '',
+    ]);
+
+    $response->assertSessionHasErrors([
+        'payment_method' => '支払い方法を選択してください',
+    ]);
+}
 }
