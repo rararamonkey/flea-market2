@@ -24,13 +24,13 @@ class PurchaseTest extends TestCase
         $item = Item::factory()->create();
 
         $response = $this->actingAs($user)->post('/purchase/' . $item->id, [
-            'payment_method' => 'カード払い',
+            'payment_method' => 'カード支払い',
         ]);
 
         $this->assertDatabaseHas('purchases', [
             'user_id' => $user->id,
             'item_id' => $item->id,
-            'payment_method' => 'カード払い',
+            'payment_method' => 'カード支払い',
             'postal_code' => '123-4567',
             'address' => '東京都渋谷区',
             'building' => 'テストビル101',
@@ -187,6 +187,27 @@ public function test_payment_method_is_required_when_purchasing()
 
     $response->assertSessionHasErrors([
         'payment_method' => '支払い方法を選択してください',
+    ]);
+}
+public function test_selected_payment_method_is_saved_when_purchasing()
+{
+    $user = User::factory()->create([
+        'postal_code' => '123-4567',
+        'address' => '東京都渋谷区',
+        'building' => 'テストビル101',
+        'email_verified_at' => now(),
+    ]);
+
+    $item = Item::factory()->create();
+
+    $this->actingAs($user)->post('/purchase/' . $item->id, [
+        'payment_method' => 'コンビニ支払い',
+    ]);
+
+    $this->assertDatabaseHas('purchases', [
+        'user_id' => $user->id,
+        'item_id' => $item->id,
+        'payment_method' => 'コンビニ支払い',
     ]);
 }
 }
